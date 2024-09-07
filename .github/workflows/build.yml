@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4  # 更新到 v4 版本
 
     - name: Install dependencies
       run: |
@@ -22,7 +22,7 @@ jobs:
       run: make
 
     - name: Upload artifact
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3  # 更新到 v3 版本
       with:
         name: minieap
         path: minieap
