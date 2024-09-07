@@ -11,18 +11,27 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4  # 更新到 v4 版本
+    - uses: actions/checkout@v4
 
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y build-essential
+        sudo apt-get install -y build-essential gcc-multilib
+
+    - name: Set up OpenWRT SDK
+      run: |
+        wget https://downloads.openwrt.org/releases/21.02.3/targets/ramips/mt7621/openwrt-sdk-21.02.3-ramips-mt7621_gcc-8.4.0_musl.Linux-x86_64.tar.xz
+        tar xf openwrt-sdk-21.02.3-ramips-mt7621_gcc-8.4.0_musl.Linux-x86_64.tar.xz
+        mv openwrt-sdk-21.02.3-ramips-mt7621_gcc-8.4.0_musl.Linux-x86_64 openwrt-sdk
+        echo "PATH=$PATH:$PWD/openwrt-sdk/staging_dir/toolchain-mipsel_24kc_gcc-8.4.0_musl/bin" >> $GITHUB_ENV
 
     - name: Build project
-      run: make
+      run: |
+        export CROSS_COMPILE=mipsel-openwrt-linux-
+        make
 
     - name: Upload artifact
-      uses: actions/upload-artifact@v3  # 更新到 v3 版本
+      uses: actions/upload-artifact@v3
       with:
         name: minieap
         path: minieap
